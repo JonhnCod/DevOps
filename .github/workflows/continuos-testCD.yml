@@ -1,0 +1,19 @@
+name: continuos Delivery
+on:
+  push:
+    branches:
+      - main
+jobs:
+  deliver:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+
+      - name: simulacao CD
+        uses: actions/upload-artifact@v4
+        with:
+          name: projeto.zip
+          path: |
+            Apitest.py
+            README.md
