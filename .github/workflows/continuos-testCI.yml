@@ -37,6 +37,9 @@ jobs:
         uses: Sniddl/discord-commits@v1.6
         with:
           webhook: ${{secrets.DISCORD_WEBHOOK}}
+          message: |
+            Commit realizado por ${{ github.actor }} 
+            [Ver status da ação](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
 
 
 
