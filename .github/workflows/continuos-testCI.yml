@@ -27,3 +27,16 @@ jobs:
       -
         name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
+
+  discord:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Discord Notification
+        uses: Sniddl/discord-commits@v1.6
+        with:
+          webhook: ${{secrets.DISCORD_WEBHOOK}}
+
+
+
