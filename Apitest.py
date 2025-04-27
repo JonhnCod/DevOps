@@ -10,6 +10,6 @@ async def root():
 
 @app.get("/gerarid")
 async def root():
-    return {"numero Aleatorio":random.randint(10000,99998)}
+    return {"numero Aleatorio":random.randint(10000,99988)}
 
 
