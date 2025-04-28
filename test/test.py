@@ -3,7 +3,7 @@ import pytest
 
 @pytest.fixture
 def aluno_teste():
-    return [{"id": 1001, "nome": "fulanoteste", "turma": "A", "matricula": 111}]
+    return {"id": 1001, "nome": "fulanoteste", "turma": "A", "matricula": 111}
 
 def test_carregar_aluno():
     alunos = carregar_aluno()
@@ -12,7 +12,7 @@ def test_carregar_aluno():
 def test_salvar_aluno(aluno_teste):
     salvar_aluno(aluno_teste)
     alunos = carregar_aluno()
-    aluno_encontrado = next((aluno for aluno in alunos if aluno["nome"] == "Teste"), None)
+    aluno_encontrado = next((aluno for aluno in alunos if aluno["nome"] == "fulanoteste"), None)
     assert aluno_encontrado is not None
 
 def test_listar_alunos():
@@ -28,11 +28,6 @@ def test_consultar_alunos():
 
     resultado_erro = consultar_alunos("id", "9999")
     assert resultado_erro == {"mensagem": "Aluno não existe ou não encontrado!!"}
-
-def test_incluir_aluno(aluno_teste):
-    incluir_aluno(aluno_teste)
-    alunos = carregar_aluno()
-    assert any(a["id"] == aluno_teste["id"] for a in alunos)
 
 
 def test_incluir_aluno(aluno_teste):

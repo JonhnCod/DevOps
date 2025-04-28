@@ -1,61 +1,76 @@
-name: Continuos testeCI
+name: Continuous Test CI
+
 on:
   pull_request:
     branches:
       - main
+
+permissions:
+  contents: read
+
 jobs:
-  Explore-GitHub-Actions:
+  lint:
+    name: Lint Python Code
     runs-on: ubuntu-latest
     steps:
-      - name: Check out repository code
+      - name: Check out code
         uses: actions/checkout@v4
 
-      - name: Python Lint Code Scanning Action
+      - name: Run Linter
         uses: advanced-security/python-lint-code-scanning-action@v1.1.2
         with:
           linter: pylint
 
-  docker:
+  docker-build:
+    name: Docker Build
     runs-on: ubuntu-latest
     steps:
-      -
-        name: Checkout
+      - name: Check out code
         uses: actions/checkout@v4
-      -
-        name: Set up QEMU
+
+      - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
-      -
-        name: Set up Docker Buildx
+
+      - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-  discord:
+  send-discord-notification:
+    name: Send Discord Notification
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Check out code
+        uses: actions/checkout@v4
 
-      - name: Discord Notification
+      - name: Send Notification
         uses: Sniddl/discord-commits@v1.6
         with:
-          webhook: ${{secrets.DISCORD_WEBHOOK}}
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
           message: |
-            Commit realizado por ${{ github.actor }} 
+            Commit realizado por ${{ github.actor }}
             [Ver status da ação](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
-  teste:
+
+  run-tests:
+    name: Run Pytest
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-      python-version: '3.13'
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
-    - name: Test with pytest
-      run: |
-        pip install pytest pytest-cov
-        pytest test/test.py --doctest-modules --junitxml=junit/test-results.xml --cov=com --cov-report=xml --cov-report=html
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run Tests with Pytest
+        run: |
+          pip install pytest pytest-cov
+          pytest test/test.py --doctest-modules --junitxml=junit/test-results.xml --cov=com --cov-report=xml --cov-report=html
+
 
 
 
