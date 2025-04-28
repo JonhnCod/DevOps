@@ -1,5 +1,5 @@
 from fastapi.testclient import TestClient
-from src.Apitest import app  # Importe a instância do FastAPI
+from src.Apitest import app
 import pytest
 import json
 
@@ -9,13 +9,13 @@ def get_aluno_teste_data():
     return {"id": 1001, "nome": "fulanoteste", "turma": "A", "matricula": 123}
 
 def clear_alunos_data():
-    """Limpa os dados de alunos para garantir testes isolados."""
+    """Limpa os dados de alunos."""
     with open('src/alunos.json', 'w') as f:
         json.dump([], f, indent=4)
 
 @pytest.fixture(scope="function", autouse=True)
 def setup_teardown():
-    """Fixture para limpar os dados antes de cada teste."""
+    """Fixture para limpar os dados antes e depois de cada teste."""
     clear_alunos_data()
     yield
     clear_alunos_data()
@@ -77,12 +77,13 @@ def test_alterar_aluno_nao_existente():
 
 def test_deletar_aluno_existente(aluno_teste):
     client.post("/alunos/incluir/", json=aluno_teste)
-    response = client.delete(f"/alunos/excluir/id/{aluno_teste['id']}")
-    assert response.status_code == 200
-    assert response.json()["message"] == "Aluno deletado com sucesso!"
-    assert response.json()["aluno"] == aluno_teste
+    response_delete = client.delete(f"/alunos/excluir/id/{aluno_teste['id']}")
+    assert response_delete.status_code == 200
+    assert response_delete.json()["message"] == "Aluno deletado com sucesso!"
+    assert response_delete.json()["aluno"] == aluno_teste
     response_get = client.get("/alunos/listar")
-    assert len(response_get.json()) == 0
+    assert response_get.status_code == 200
+    assert response_get.json() == {"mensagem": "Nenhum Aluno encontrado!!"}
 
 def test_deletar_aluno_nao_existente():
     response = client.delete("/alunos/excluir/nome/AlunoInexistente")
