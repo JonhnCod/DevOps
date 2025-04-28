@@ -15,13 +15,14 @@ def test_salvar_aluno(aluno_teste):
     aluno_encontrado = next((aluno for aluno in alunos if aluno["nome"] == "fulanoteste"), None)
     assert aluno_encontrado is not None
 
+@pytest.mark.asyncio
 def test_listar_alunos():
     alunos = listar_alunos()
     if isinstance(alunos, dict):
         assert alunos == {"mensagem": "Nenhum Aluno encontrado!!"}
     else:
         assert isinstance(alunos, list)
-
+@pytest.mark.asyncio
 def test_consultar_alunos():
     resultado = consultar_alunos("id", 1)
     assert resultado[0]["nome"] == "fulanoteste"
@@ -29,7 +30,7 @@ def test_consultar_alunos():
     resultado_erro = consultar_alunos("id", "9999")
     assert resultado_erro == {"mensagem": "Aluno não existe ou não encontrado!!"}
 
-
+@pytest.mark.asyncio
 def test_incluir_aluno(aluno_teste):
     alunos_existentes = carregar_aluno()
 
@@ -42,7 +43,7 @@ def test_incluir_aluno(aluno_teste):
     alunos = carregar_aluno()
     assert any(a["id"] == aluno_teste[0]["id"] for a in alunos)
 
-
+@pytest.mark.asyncio
 def test_alterar_aluno(aluno_teste):
     novo_aluno = Aluno(id=4, nome="Depois", turma="D", matricula=444)
 
