@@ -45,7 +45,7 @@ async def consultar_alunos(campo: str, valor: str):
 @app.post("/alunos/incluir/")
 async def incluir_aluno(aluno: Aluno):
     alunos = carregar_aluno()
-    novo_aluno = aluno.dict()
+    novo_aluno = aluno.model_dump()
     alunos.append(novo_aluno)
     salvar_aluno(alunos)
     return {"messagem": "Aluno adicionado com sucesso!!"}
@@ -87,7 +87,7 @@ async def alterar_aluno(campo: str, valor: str, aluno_atualizado: Aluno):
 
     for i, aluno in enumerate(alunos):
         if aluno.get(campo) == valor:
-            alunos[i] = aluno_atualizado.dict()
+            alunos[i] = aluno_atualizado.model_dump()
             break
 
     salvar_aluno(alunos)
